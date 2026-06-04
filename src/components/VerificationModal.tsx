@@ -34,20 +34,31 @@ export default function VerificationModal({
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    if (visible) {
+    if (!visible) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
       setCode("");
       setIsSubmitting(false);
-      const timer = setTimeout(() => inputRef.current?.focus(), 300);
-      return () => clearTimeout(timer);
-    }
+      inputRef.current?.focus();
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [visible]);
 
   // Reset code and loading state when parent reports an error
   useEffect(() => {
-    if (error) {
+    if (!error) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
       setCode("");
       setIsSubmitting(false);
-    }
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [error]);
 
   const handleCodeChange = async (text: string) => {
@@ -131,7 +142,7 @@ export default function VerificationModal({
 
           <TouchableOpacity style={styles.resendBtn} onPress={handleResend}>
             <Text style={styles.resendText}>
-              Didn't receive it? <Text style={styles.resendLink}>Resend</Text>
+              Did not receive it? <Text style={styles.resendLink}>Resend</Text>
             </Text>
           </TouchableOpacity>
         </View>

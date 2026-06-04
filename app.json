@@ -45,7 +45,9 @@
             "./assets/assets/fonts/Poppins-Bold.ttf"
           ]
         }
-      ]
+      ],
+      "@clerk/expo",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
