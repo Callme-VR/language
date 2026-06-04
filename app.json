@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "language",
-    "slug": "language",
+    "name": "langTrans",
+    "slug": "langtrans",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "language",
+    "scheme": "langtrans",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -28,11 +28,22 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#6C4EF5",
           "android": {
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 76
           }
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/assets/fonts/Poppins-Regular.ttf",
+            "./assets/assets/fonts/Poppins-Medium.ttf",
+            "./assets/assets/fonts/Poppins-SemiBold.ttf",
+            "./assets/assets/fonts/Poppins-Bold.ttf"
+          ]
         }
       ]
     ],
