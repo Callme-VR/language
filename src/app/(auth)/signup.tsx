@@ -11,8 +11,6 @@ WebBrowser.maybeCompleteAuthSession();
 
 const oauthStrategies = {
   google: "oauth_google",
-  facebook: "oauth_facebook",
-  apple: "oauth_apple",
 } as const;
 
 export default function SignUpScreen() {
@@ -33,7 +31,7 @@ export default function SignUpScreen() {
 
   useEffect(() => {
     if (isSignedIn) {
-      router.replace("/");
+      router.replace("/(home)/index");
     }
   }, [isSignedIn, router]);
 
@@ -45,7 +43,7 @@ export default function SignUpScreen() {
           return;
         }
 
-        router.replace("/");
+        router.replace("/(home)/index");
       },
     });
   };
@@ -139,7 +137,7 @@ export default function SignUpScreen() {
 
       if (createdSessionId) {
         await setActive?.({ session: createdSessionId });
-        router.replace("/");
+        router.replace("/(home)/index");
       }
     } catch (error) {
       setFormError(getClerkErrorMessage(error, "Social sign up failed."));

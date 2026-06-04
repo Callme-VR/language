@@ -8,7 +8,7 @@ export default function AuthLayout() {
     return null;
   }
   if (isSignedIn) {
-    return <Redirect href="/" />;
+    return <Redirect href="/(home)/index" />;
   }
   return (
     <Stack

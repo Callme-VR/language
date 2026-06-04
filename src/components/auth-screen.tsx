@@ -1,6 +1,6 @@
 import SocialButton from "@/components/SocialButton";
 import { images } from "@/constants/images";
-import { AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import type { ComponentProps, ReactNode } from "react";
 import {
   Image,
@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export type SocialProvider = "google" | "facebook" | "apple";
+export type SocialProvider = "google";
 
 type AuthScreenProps = {
   title: string;
@@ -22,19 +22,20 @@ type AuthScreenProps = {
   footerText: string;
   footerActionLabel: string;
   email: string;
-  password: string;
-  showPassword: boolean;
+  password?: string;
+  showPassword?: boolean;
   isSubmitting: boolean;
   formError?: string;
   emailError?: string;
   passwordError?: string;
   onBack: () => void;
   onEmailChange: (value: string) => void;
-  onPasswordChange: (value: string) => void;
-  onTogglePassword: () => void;
+  onPasswordChange?: (value: string) => void;
+  onTogglePassword?: () => void;
   onSubmit: () => void;
   onFooterPress: () => void;
   onSocialPress: (provider: SocialProvider) => void;
+  hidePassword?: boolean;
 };
 
 const socialButtons: {
@@ -46,16 +47,6 @@ const socialButtons: {
     provider: "google",
     label: "Continue with Google",
     icon: <AntDesign name="google" size={25} color="#4285F4" />,
-  },
-  {
-    provider: "facebook",
-    label: "Continue with Facebook",
-    icon: <FontAwesome name="facebook" size={29} color="#1877F2" />,
-  },
-  {
-    provider: "apple",
-    label: "Continue with Apple",
-    icon: <FontAwesome name="apple" size={30} color="#001328" />,
   },
 ];
 
@@ -81,6 +72,7 @@ export default function AuthScreen({
   onSubmit,
   onFooterPress,
   onSocialPress,
+  hidePassword,
 }: AuthScreenProps) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
@@ -137,31 +129,33 @@ export default function AuthScreen({
             value={email}
           />
 
-          <AuthField
-            error={passwordError}
-            label="Password"
-            onChangeText={onPasswordChange}
-            placeholder={passwordDots}
-            secureTextEntry={!showPassword}
-            textContentType="password"
-            value={password}
-            rightElement={
-              <TouchableOpacity
-                accessibilityLabel={
-                  showPassword ? "Hide password" : "Show password"
-                }
-                activeOpacity={0.75}
-                className="h-10 w-10 items-center justify-center"
-                onPress={onTogglePassword}
-              >
-                <Feather
-                  name={showPassword ? "eye-off" : "eye"}
-                  size={24}
-                  color="#6B7280"
-                />
-              </TouchableOpacity>
-            }
-          />
+          {!hidePassword ? (
+            <AuthField
+              error={passwordError}
+              label="Password"
+              onChangeText={onPasswordChange}
+              placeholder={passwordDots}
+              secureTextEntry={!showPassword}
+              textContentType="password"
+              value={password}
+              rightElement={
+                <TouchableOpacity
+                  accessibilityLabel={
+                    showPassword ? "Hide password" : "Show password"
+                  }
+                  activeOpacity={0.75}
+                  className="h-10 w-10 items-center justify-center"
+                  onPress={onTogglePassword}
+                >
+                  <Feather
+                    name={showPassword ? "eye-off" : "eye"}
+                    size={24}
+                    color="#6B7280"
+                  />
+                </TouchableOpacity>
+              }
+            />
+          ) : null}
         </View>
 
         {formError ? (

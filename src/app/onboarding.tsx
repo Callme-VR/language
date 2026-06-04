@@ -1,10 +1,15 @@
 import { images } from "@/constants/images";
-import { useRouter } from "expo-router";
+import { useAuth } from "@clerk/expo";
+import { Redirect, useRouter } from "expo-router";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function OnboardingScreen() {
   const router = useRouter();
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) return null;
+  if (isSignedIn) return <Redirect href="/(home)/index" />;
 
   const handleGetStarted = () => {
     router.push("/(auth)/signup");
@@ -32,8 +37,8 @@ export default function OnboardingScreen() {
 
           {/* Main Heading */}
           <Text className="text-4xl font-bold text-center mb-4 color-text-primary">
-            Your Real <span className="text-lingua-purple">Time</span> Language
-            <span className="text-lingua-purple">Translator</span>
+            Your Real <Text className="text-lingua-purple">Time</Text> Language{" "}
+            <Text className="text-lingua-purple">Translator</Text>
           </Text>
 
           {/* Subheading */}
@@ -86,7 +91,6 @@ export default function OnboardingScreen() {
             <Text className="text-white text-lg font-semibold">
               Get Started
             </Text>
-            <Text className="text-white text-2xl ml-3">→</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
