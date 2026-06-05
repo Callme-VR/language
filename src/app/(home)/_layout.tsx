@@ -9,8 +9,15 @@ export default function Layout() {
   }
 
   if (!isSignedIn) {
-    return <Redirect href="/(auth)/signin" />;
+    return <Redirect href="/onboarding" />;
   }
 
-  return <Stack />;
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: "#FFFFFF" },
+      }}
+    />
+  );
 }

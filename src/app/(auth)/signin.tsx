@@ -9,13 +9,16 @@ import { View } from "react-native";
 
 WebBrowser.maybeCompleteAuthSession();
 
+const HOME_ROUTE = "/(home)" as const;
+const OAUTH_REDIRECT_URL = "langtrans://oauth-callback";
+
 const oauthStrategies = {
   google: "oauth_google",
 } as const;
 
 export default function SignInScreen() {
   const router = useRouter();
-  const { isSignedIn, setActive } = useAuth();
+  const { isSignedIn } = useAuth();
   const { signIn, errors, fetchStatus } = useSignIn();
   const { startSSOFlow } = useSSO();
 
@@ -29,7 +32,7 @@ export default function SignInScreen() {
 
   useEffect(() => {
     if (isSignedIn) {
-      router.replace("/(home)/index");
+      router.replace(HOME_ROUTE);
     }
   }, [isSignedIn, router]);
 
@@ -43,8 +46,9 @@ export default function SignInScreen() {
     setVerificationError("");
 
     try {
+      const emailAddress = email.trim();
       const { error } = await signIn.create({
-        identifier: email.trim(),
+        identifier: emailAddress,
       });
 
       if (error) {
@@ -52,10 +56,9 @@ export default function SignInScreen() {
         return;
       }
 
-      const { error: verificationSendError } =
-        await signIn.prepareEmailAddressVerification({
-          strategy: "email_code",
-        });
+      const { error: verificationSendError } = await signIn.emailCode.sendCode({
+        emailAddress,
+      });
 
       if (verificationSendError) {
         setFormError(
@@ -77,8 +80,7 @@ export default function SignInScreen() {
     setVerificationError("");
 
     try {
-      const { error } = await signIn.attemptFirstFactor({
-        strategy: "email_code",
+      const { error } = await signIn.emailCode.verifyCode({
         code,
       });
 
@@ -90,8 +92,19 @@ export default function SignInScreen() {
       }
 
       if (signIn.status === "complete") {
-        await setActive({ session: signIn.createdSessionId });
-        router.replace("/(home)/index");
+        await signIn.finalize({
+          navigate: ({ session }) => {
+            if (session?.currentTask) {
+              setVerificationError(
+                "Your account needs one more step before you can continue.",
+              );
+              return;
+            }
+
+            setShowVerification(false);
+            router.replace(HOME_ROUTE);
+          },
+        });
         return;
       }
 
@@ -106,9 +119,7 @@ export default function SignInScreen() {
   const handleResendCode = async () => {
     setVerificationError("");
 
-    const { error } = await signIn.prepareEmailAddressVerification({
-      strategy: "email_code",
-    });
+    const { error } = await signIn.emailCode.sendCode();
 
     if (error) {
       setVerificationError(
@@ -124,12 +135,14 @@ export default function SignInScreen() {
     try {
       const { createdSessionId, setActive: setActiveSSO } = await startSSOFlow({
         strategy: oauthStrategies[provider],
-        redirectUrl: "langtrans://oauth-callback",
+        redirectUrl: OAUTH_REDIRECT_URL,
       });
 
       if (createdSessionId) {
         await setActiveSSO?.({ session: createdSessionId });
-        router.replace("/(home)/index");
+        router.replace(HOME_ROUTE);
+      } else {
+        setFormError("Google sign in did not complete. Please try again.");
       }
     } catch (error) {
       setFormError(getClerkErrorMessage(error, "Social sign in failed."));

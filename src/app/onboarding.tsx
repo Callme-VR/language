@@ -9,7 +9,7 @@ export default function OnboardingScreen() {
   const { isSignedIn, isLoaded } = useAuth();
 
   if (!isLoaded) return null;
-  if (isSignedIn) return <Redirect href="/(home)/index" />;
+  if (isSignedIn) return <Redirect href="/(home)" />;
 
   const handleGetStarted = () => {
     router.push("/(auth)/signup");

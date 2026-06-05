@@ -9,6 +9,9 @@ import { View } from "react-native";
 
 WebBrowser.maybeCompleteAuthSession();
 
+const HOME_ROUTE = "/(home)" as const;
+const OAUTH_REDIRECT_URL = "langtrans://oauth-callback";
+
 const oauthStrategies = {
   google: "oauth_google",
 } as const;
@@ -31,22 +34,9 @@ export default function SignUpScreen() {
 
   useEffect(() => {
     if (isSignedIn) {
-      router.replace("/(home)/index");
+      router.replace(HOME_ROUTE);
     }
   }, [isSignedIn, router]);
-
-  const finishSignUp = async () => {
-    await signUp.finalize({
-      navigate: ({ session }) => {
-        if (session?.currentTask) {
-          setFormError("Please complete your remaining account setup.");
-          return;
-        }
-
-        router.replace("/(home)/index");
-      },
-    });
-  };
 
   const handleSubmit = async () => {
     if (!email.trim() || !password) {
@@ -101,7 +91,19 @@ export default function SignUpScreen() {
       }
 
       if (signUp.status === "complete") {
-        await finishSignUp();
+        await signUp.finalize({
+          navigate: ({ session }) => {
+            if (session?.currentTask) {
+              setVerificationError(
+                "Your account needs one more step before you can continue.",
+              );
+              return;
+            }
+
+            setShowVerification(false);
+            router.replace(HOME_ROUTE);
+          },
+        });
         return;
       }
 
@@ -132,12 +134,14 @@ export default function SignUpScreen() {
     try {
       const { createdSessionId, setActive } = await startSSOFlow({
         strategy: oauthStrategies[provider],
-        redirectUrl: "langtrans://oauth-callback",
+        redirectUrl: OAUTH_REDIRECT_URL,
       });
 
       if (createdSessionId) {
         await setActive?.({ session: createdSessionId });
-        router.replace("/(home)/index");
+        router.replace(HOME_ROUTE);
+      } else {
+        setFormError("Google sign up did not complete. Please try again.");
       }
     } catch (error) {
       setFormError(getClerkErrorMessage(error, "Social sign up failed."));
