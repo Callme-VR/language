@@ -1,18 +1,24 @@
-import { View, Text, TouchableOpacity, Dimensions } from "react-native";
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { useEffect } from "react";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
-  withSpring,
   useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
-import { useEffect } from "react";
 
 const { width } = Dimensions.get("window");
 const TAB_BAR_WIDTH = width;
 const TAB_WIDTH = TAB_BAR_WIDTH / 5;
 
-const icons: Record<string, { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap }> = {
+const icons: Record<
+  string,
+  {
+    active: keyof typeof Ionicons.glyphMap;
+    inactive: keyof typeof Ionicons.glyphMap;
+  }
+> = {
   index: { active: "home", inactive: "home-outline" },
   learn: { active: "book", inactive: "book-outline" },
   "ai-teacher": { active: "school", inactive: "school-outline" },
@@ -20,7 +26,11 @@ const icons: Record<string, { active: keyof typeof Ionicons.glyphMap; inactive: 
   profile: { active: "person", inactive: "person-outline" },
 };
 
-export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+export function CustomTabBar({
+  state,
+  descriptors,
+  navigation,
+}: BottomTabBarProps) {
   const translateX = useSharedValue(state.index * TAB_WIDTH);
 
   useEffect(() => {
@@ -37,7 +47,7 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
   });
 
   return (
-    <View className="flex-row bg-white h-[85px] border-t border-gray-100 items-center justify-around pb-6 px-2">
+    <View className="flex-row bg-white h-21.25 border-t border-gray-100 items-center justify-around pb-6 px-2">
       {/* Animated Indicator Circle */}
       <Animated.View
         style={[
@@ -80,7 +90,11 @@ export function CustomTabBar({ state, descriptors, navigation }: BottomTabBarPro
           >
             <View className="items-center justify-center h-12 w-full mt-2">
               <Ionicons
-                name={isFocused ? icons[route.name].active : icons[route.name].inactive}
+                name={
+                  isFocused
+                    ? icons[route.name].active
+                    : icons[route.name].inactive
+                }
                 size={24}
                 color={isFocused ? "#FFFFFF" : "#9CA3AF"}
               />
