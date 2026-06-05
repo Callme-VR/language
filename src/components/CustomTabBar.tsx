@@ -12,7 +12,7 @@ import {
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -43,9 +43,9 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   );
 
   useEffect(() => {
-    indicatorX.value = withSpring(
+    indicatorX.value = withTiming(
       state.index * tabWidth + (tabWidth - CIRCLE_SIZE) / 2,
-      { damping: 18, stiffness: 160 },
+      { duration: 250 },
     );
   }, [state.index]);
 
