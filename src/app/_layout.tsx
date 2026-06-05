@@ -3,6 +3,7 @@ import "../../global.css";
 import { tokenCache } from "@/lib/clerk";
 import { ClerkProvider } from "@clerk/expo";
 import { Stack } from "expo-router";
+import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -13,9 +14,18 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    "Poppins-Regular": require("../../assets/assets/fonts/Poppins-Regular.ttf"),
+    "Poppins-Medium": require("../../assets/assets/fonts/Poppins-Medium.ttf"),
+    "Poppins-SemiBold": require("../../assets/assets/fonts/Poppins-SemiBold.ttf"),
+    "Poppins-Bold": require("../../assets/assets/fonts/Poppins-Bold.ttf"),
+  });
+
   useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
 
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
@@ -23,6 +33,10 @@ export default function RootLayout() {
     throw new Error(
       "Missing EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY. Please set it in your .env file.",
     );
+  }
+
+  if (!loaded && !error) {
+    return null;
   }
 
   return (

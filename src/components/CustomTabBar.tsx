@@ -1,72 +1,64 @@
+import { colors, fontFamily } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
-import { Dimensions, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const { width } = Dimensions.get("window");
-const TAB_BAR_WIDTH = width;
-const TAB_WIDTH = TAB_BAR_WIDTH / 5;
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const CIRCLE_SIZE = 52;
+const TAB_HEIGHT = 64;
 
-const icons: Record<
-  string,
-  {
-    active: keyof typeof Ionicons.glyphMap;
-    inactive: keyof typeof Ionicons.glyphMap;
-  }
-> = {
-  index: { active: "home", inactive: "home-outline" },
-  learn: { active: "book", inactive: "book-outline" },
-  "ai-teacher": { active: "school", inactive: "school-outline" },
-  chat: { active: "chatbubbles", inactive: "chatbubbles-outline" },
-  profile: { active: "person", inactive: "person-outline" },
+type TabConfig = {
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  activeIcon: keyof typeof Ionicons.glyphMap;
 };
 
-export function CustomTabBar({
-  state,
-  descriptors,
-  navigation,
-}: BottomTabBarProps) {
-  const translateX = useSharedValue(state.index * TAB_WIDTH);
+const TABS: TabConfig[] = [
+  { label: "Home", icon: "home-outline", activeIcon: "home" },
+  { label: "Learn", icon: "book-outline", activeIcon: "book" },
+  { label: "AI Teacher", icon: "sparkles-outline", activeIcon: "sparkles" },
+  { label: "Chat", icon: "chatbubbles-outline", activeIcon: "chatbubbles" },
+  { label: "Profile", icon: "person-outline", activeIcon: "person" },
+];
+
+export function CustomTabBar({ state, navigation }: BottomTabBarProps) {
+  const insets = useSafeAreaInsets();
+  const tabWidth = SCREEN_WIDTH / TABS.length;
+
+  const indicatorX = useSharedValue(
+    state.index * tabWidth + (tabWidth - CIRCLE_SIZE) / 2,
+  );
 
   useEffect(() => {
-    translateX.value = withSpring(state.index * TAB_WIDTH, {
-      damping: 20,
-      stiffness: 150,
-    });
+    indicatorX.value = withSpring(
+      state.index * tabWidth + (tabWidth - CIRCLE_SIZE) / 2,
+      { damping: 18, stiffness: 160 },
+    );
   }, [state.index]);
 
-  const animatedCircleStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateX: translateX.value }],
-    };
-  });
+  const indicatorStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: indicatorX.value }],
+  }));
 
   return (
-    <View className="flex-row bg-white h-21.25 border-t border-gray-100 items-center justify-around pb-6 px-2">
-      {/* Animated Indicator Circle */}
-      <Animated.View
-        style={[
-          animatedCircleStyle,
-          {
-            position: "absolute",
-            width: TAB_WIDTH,
-            alignItems: "center",
-            justifyContent: "center",
-            top: 12, // Align with the icons
-          },
-        ]}
-      >
-        <View className="w-12 h-12 rounded-full bg-lingua-purple shadow-lg shadow-lingua-purple/30" />
-      </Animated.View>
+    <View style={[styles.container, { paddingBottom: insets.bottom || 8 }]}>
+      <Animated.View style={[styles.indicator, indicatorStyle]} />
 
       {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const label = options.title !== undefined ? options.title : route.name;
+        const tab = TABS[index];
         const isFocused = state.index === index;
 
         const onPress = () => {
@@ -75,7 +67,6 @@ export function CustomTabBar({
             target: route.key,
             canPreventDefault: true,
           });
-
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name);
           }
@@ -85,28 +76,53 @@ export function CustomTabBar({
           <TouchableOpacity
             key={route.key}
             onPress={onPress}
-            className="items-center justify-center flex-1"
-            activeOpacity={0.7}
+            style={styles.tab}
+            activeOpacity={0.8}
           >
-            <View className="items-center justify-center h-12 w-full mt-2">
-              <Ionicons
-                name={
-                  isFocused
-                    ? icons[route.name].active
-                    : icons[route.name].inactive
-                }
-                size={24}
-                color={isFocused ? "#FFFFFF" : "#9CA3AF"}
-              />
-              {!isFocused && (
-                <Text className="text-[11px] font-poppins-medium text-gray-400 mt-1">
-                  {label}
-                </Text>
-              )}
-            </View>
+            <Ionicons
+              name={isFocused ? tab.activeIcon : tab.icon}
+              size={22}
+              color={isFocused ? "#fff" : colors.neutral.textSecondary}
+            />
+            {!isFocused && <Text style={styles.label}>{tab.label}</Text>}
           </TouchableOpacity>
         );
       })}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    backgroundColor: colors.neutral.background,
+    borderTopWidth: 1,
+    borderTopColor: colors.neutral.border,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  indicator: {
+    position: "absolute",
+    top: (TAB_HEIGHT - CIRCLE_SIZE) / 2,
+    left: 0,
+    width: CIRCLE_SIZE,
+    height: CIRCLE_SIZE,
+    borderRadius: CIRCLE_SIZE / 2,
+    backgroundColor: colors.primary.purple,
+  },
+  tab: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    height: TAB_HEIGHT,
+  },
+  label: {
+    fontFamily: fontFamily.medium,
+    fontSize: 10,
+    color: colors.neutral.textSecondary,
+    marginTop: 3,
+  },
+});
