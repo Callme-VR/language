@@ -326,6 +326,195 @@ export const LESSONS: Lesson[] = [
     },
   },
 
+  {
+    id: "es-lesson-4",
+    unitId: "es-unit-1",
+    title: "Colors & Descriptions",
+    description: "Learn basic colors and how to describe things in Spanish",
+    icon: "🎨",
+    xpReward: 10,
+    goals: [
+      { description: "Learn 5 color names", xpReward: 5 },
+      { description: "Complete all activities", xpReward: 5 },
+    ],
+    vocabulary: [
+      {
+        word: "Rojo",
+        translation: "Red",
+        pronunciation: "ROH-hoh",
+        emoji: "🔴",
+      },
+      {
+        word: "Azul",
+        translation: "Blue",
+        pronunciation: "ah-SOOL",
+        emoji: "🔵",
+      },
+      {
+        word: "Verde",
+        translation: "Green",
+        pronunciation: "BEHR-deh",
+        emoji: "🟢",
+      },
+      {
+        word: "Amarillo",
+        translation: "Yellow",
+        pronunciation: "ah-mah-REE-yoh",
+        emoji: "🟡",
+      },
+      {
+        word: "Blanco",
+        translation: "White",
+        pronunciation: "BLAHN-koh",
+        emoji: "⚪",
+      },
+    ],
+    phrases: [
+      {
+        text: "¿De qué color es?",
+        translation: "What color is it?",
+        pronunciation: "deh KEH koh-LOHR ehs",
+      },
+      {
+        text: "Es rojo.",
+        translation: "It is red.",
+        pronunciation: "ehs ROH-hoh",
+      },
+      {
+        text: "Me gusta el azul.",
+        translation: "I like blue.",
+        pronunciation: "meh GOOS-tah ehl ah-SOOL",
+      },
+    ],
+    activities: [
+      {
+        id: "es-lesson-4-act-1",
+        type: "multiple-choice",
+        question: 'What does "Rojo" mean?',
+        correctAnswer: "Red",
+        options: ["Red", "Blue", "Green", "Yellow"],
+      },
+      {
+        id: "es-lesson-4-act-2",
+        type: "multiple-choice",
+        question: 'How do you say "Blue" in Spanish?',
+        correctAnswer: "Azul",
+        options: ["Verde", "Rojo", "Azul", "Blanco"],
+      },
+      {
+        id: "es-lesson-4-act-3",
+        type: "translate",
+        question: 'Translate: "Green"',
+        correctAnswer: "Verde",
+        hint: 'Sounds like "BEHR-deh".',
+      },
+    ],
+    aiTeacherPrompt: {
+      systemPrompt:
+        "You're Luna, a cheerful Spanish teacher in a real back-and-forth voice lesson about colors in Spanish. This is INTERACTIVE — not a lecture. Teach ONE color at a time: say it, give the English meaning, then END YOUR TURN and wait for the student to repeat it. Your turn ENDS at the question mark — stop there and output nothing else. Never write a reaction in the same turn as a teaching step. Keep every reply to one or two sentences. Stay strictly within: rojo, azul, verde, amarillo, blanco, ¿De qué color es?, and Me gusta el azul.",
+      introMessage:
+        "¡Hola! Today we're going to see the world in color — vamos a aprender los colores en español!",
+      topics: ["colors", "descriptions", "likes and preferences"],
+    },
+  },
+
+  {
+    id: "es-lesson-5",
+    unitId: "es-unit-1",
+    title: "At the Restaurant",
+    description: "Order food and drinks like a local in Spanish",
+    icon: "🍽️",
+    xpReward: 15,
+    goals: [
+      { description: "Learn 5 restaurant phrases", xpReward: 8 },
+      { description: "Complete all activities", xpReward: 7 },
+    ],
+    vocabulary: [
+      {
+        word: "La comida",
+        translation: "Food",
+        pronunciation: "lah koh-MEE-dah",
+        emoji: "🍲",
+      },
+      {
+        word: "La bebida",
+        translation: "Drink",
+        pronunciation: "lah beh-BEE-dah",
+        emoji: "🥤",
+      },
+      {
+        word: "La cuenta",
+        translation: "The bill",
+        pronunciation: "lah KWEHN-tah",
+        emoji: "🧾",
+      },
+      {
+        word: "Agua",
+        translation: "Water",
+        pronunciation: "AH-gwah",
+        emoji: "💧",
+      },
+      {
+        word: "La mesa",
+        translation: "The table",
+        pronunciation: "lah MEH-sah",
+        emoji: "🪑",
+      },
+    ],
+    phrases: [
+      {
+        text: "Una mesa para dos, por favor.",
+        translation: "A table for two, please.",
+        pronunciation: "OO-nah MEH-sah PAH-rah dohs, pohr fah-VOHR",
+      },
+      {
+        text: "Quisiera un café, por favor.",
+        translation: "I would like a coffee, please.",
+        pronunciation: "kee-SYEH-rah oon kah-FEH, pohr fah-VOHR",
+      },
+      {
+        text: "La cuenta, por favor.",
+        translation: "The bill, please.",
+        pronunciation: "lah KWEHN-tah, pohr fah-VOHR",
+      },
+    ],
+    activities: [
+      {
+        id: "es-lesson-5-act-1",
+        type: "multiple-choice",
+        question: 'How do you say "Water" in Spanish?',
+        correctAnswer: "Agua",
+        options: ["Leche", "Agua", "Vino", "Café"],
+      },
+      {
+        id: "es-lesson-5-act-2",
+        type: "translate",
+        question: 'Translate: "The bill, please."',
+        correctAnswer: "La cuenta, por favor.",
+        hint: '"Cuenta" means bill or account.',
+      },
+      {
+        id: "es-lesson-5-act-3",
+        type: "multiple-choice",
+        question: 'What does "Quisiera" mean?',
+        correctAnswer: "I would like",
+        options: [
+          "I want",
+          "I have",
+          "I would like",
+          "I need",
+        ],
+      },
+    ],
+    aiTeacherPrompt: {
+      systemPrompt:
+        "You're Luna, a friendly Spanish teacher in a real back-and-forth voice lesson set in a Spanish restaurant. This is INTERACTIVE — not a lecture. Teach ONE phrase at a time: say it in Spanish, give the English translation, then END YOUR TURN and wait for the student. Your turn ENDS at the question mark — stop there and output nothing else. Never write a reaction in the same turn as a teaching step. Keep every reply to one or two sentences. Stay strictly within: la comida, la bebida, la cuenta, agua, la mesa, Una mesa para dos por favor, Quisiera un café por favor, and La cuenta por favor.",
+      introMessage:
+        "¡Hola! Hoy vamos a un restaurante — let's learn how to order food in Spanish like a local!",
+      topics: ["restaurant", "ordering food", "politeness", "common phrases"],
+    },
+  },
+
   // ─── French ────────────────────────────────────────────────────────────────
 
   {
