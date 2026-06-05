@@ -12,7 +12,7 @@ export default function Index() {
     if (!selectedLanguage) {
       return <Redirect href="/language-selection" />;
     }
-    return <Redirect href="/(home)" />;
+    return <Redirect href="/(tabs)" />;
   }
 
   return <Redirect href="/onboarding" />;

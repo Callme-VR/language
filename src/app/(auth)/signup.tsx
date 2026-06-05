@@ -9,7 +9,7 @@ import { View } from "react-native";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const HOME_ROUTE = "/(home)" as const;
+const HOME_ROUTE = "/(tabs)" as const;
 const OAUTH_REDIRECT_URL = "langtrans://oauth-callback";
 
 const oauthStrategies = {
